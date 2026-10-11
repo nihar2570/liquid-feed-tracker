@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Feed Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js for Trends -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- HOME TAB -->
+    <div id="home-tab" class="tab-content active">
+      <h1 class="page-title">Feed Tracker</h1>
+      
+      <div class="ios-card">
+        <h2 class="section-title">Today's Total</h2>
+        <p id="today-total" class="total-text">0 ml</p>
+      </div>
+
+      <div class="ios-card">
+        <div class="input-group">
+          <input type="datetime-local" id="feed-time" class="ios-input" />
+          <input type="number" id="feed-amount" placeholder="Amount in ml" class="ios-input" />
+        </div>
+        <button id="add-btn" class="ios-button">Add Feed</button>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 24px;">Recent Logs</h2>
+      <div class="ios-card" id="logs-container">
+        <p style="color: var(--ios-text-muted);">Loading...</p>
+      </div>
+    </div>
+
+    <!-- TRENDS TAB -->
+    <div id="trends-tab" class="tab-content">
+      <h1 class="page-title">Trends</h1>
+      <div class="ios-card">
+        <canvas id="trendsChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <button class="nav-button active" onclick="switchTab('home')">Home</button>
+    <button class="nav-button" onclick="switchTab('trends')">Trends</button>
+  </nav>
+
+  <!-- FIREBASE & APP LOGIC -->
+  <script type="module" src="app.js"></script>
+  
+  <!-- TAB SWITCHING LOGIC -->
+  <script>
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+  </script>
+</body>
+</html>

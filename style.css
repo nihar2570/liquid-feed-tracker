@@ -1,0 +1,191 @@
+:root {
+  --ios-blue: #007AFF;
+  --ios-text: #1d1d1f;
+  --ios-text-muted: #86868b;
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+/* 1. Animated Liquid Background */
+@keyframes liquidBg {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+body {
+  background: linear-gradient(-45deg, #e6f0ff, #f3f0ff, #ffe6f3, #e6f9ff);
+  background-size: 400% 400%;
+  animation: liquidBg 18s ease infinite;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+  margin: 0; 
+  padding: 0;
+  color: var(--ios-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  padding: 16px;
+  padding-bottom: 120px; /* Extra space for the floating nav */
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.tab-content { display: none; opacity: 0; transition: opacity 0.4s ease; }
+.tab-content.active { display: block; opacity: 1; }
+
+.page-title { 
+  font-size: 32px; 
+  font-weight: 700; 
+  margin-bottom: 24px; 
+  letter-spacing: -0.5px;
+}
+
+.section-title { 
+  font-size: 18px; 
+  font-weight: 600; 
+  margin-bottom: 16px; 
+  color: #333;
+}
+
+.total-text { 
+  font-size: 36px; 
+  font-weight: 800; 
+  color: var(--ios-blue); 
+  margin: 0; 
+  letter-spacing: -1px;
+}
+
+/* 2. Frosted Glass Cards */
+.ios-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+  padding: 20px;
+  box-shadow: var(--glass-shadow);
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Inner liquid shine effect on cards */
+.ios-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.8), rgba(255,255,255,0));
+}
+
+.input-group { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  margin-bottom: 16px; 
+}
+
+/* 3. Inset Liquid Inputs */
+.ios-input {
+  width: 100%; 
+  padding: 14px 18px; 
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
+  font-size: 16px; 
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.ios-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--ios-blue);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15), inset 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+/* 4. Vibrant Premium Button */
+.ios-button {
+  background: linear-gradient(135deg, #007AFF 0%, #0056b3 100%);
+  color: white; 
+  border: none;
+  border-radius: 18px; 
+  padding: 16px; 
+  font-size: 17px; 
+  font-weight: 600;
+  width: 100%; 
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ios-button:active { 
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.log-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.log-item:last-child { border-bottom: none; }
+.log-time { font-weight: 500; font-size: 15px; color: #555; }
+.log-amount { color: var(--ios-blue); font-weight: 700; font-size: 17px; }
+
+/* 5. Floating Pill Bottom Nav */
+.bottom-nav {
+  position: fixed; 
+  bottom: 24px; 
+  left: 16px; 
+  right: 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.75); 
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  display: flex; 
+  justify-content: space-around; 
+  padding: 8px 16px;
+  z-index: 1000;
+}
+
+.nav-button {
+  background: none; 
+  border: none; 
+  color: var(--ios-text-muted);
+  font-size: 14px; 
+  font-weight: 500; 
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.nav-button.active { 
+  color: var(--ios-blue); 
+  font-weight: 700; 
+  background: rgba(0, 122, 255, 0.1);
+}
+
+/* Edit Button Styling */
+.edit-btn {
+  background: rgba(0, 122, 255, 0.1);
+  color: var(--ios-blue);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-btn:active {
+  background: rgba(0, 122, 255, 0.2);
+  transform: scale(0.95);
+}
