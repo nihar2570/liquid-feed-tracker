@@ -17,6 +17,28 @@ let chartInstance = null;
 let editingId = null;
 let allFeedsData = [];
 let currentChartDays = 7;
+const DAILY_GOAL = 700; // Change this to your daily target
+let timerInterval = null;
+let mostRecentFeedTime = null;
+
+// Theme Toggle Logic
+const themeBtn = document.getElementById('theme-btn');
+const initTheme = () => {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.body.classList.add('dark-mode');
+    themeBtn.innerText = '☀️';
+  }
+};
+initTheme();
+
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  themeBtn.innerText = isDark ? '☀️' : '🌙';
+  updateChart(); // Redraw chart to update colors
+});
 
 const setTimeInputToNow = () => {
   const now = new Date();
@@ -24,6 +46,19 @@ const setTimeInputToNow = () => {
   document.getElementById('feed-time').value = now.toISOString().slice(0, 16);
 };
 setTimeInputToNow();
+
+// Timer Function
+const updateTimeSinceLastFeed = () => {
+  const el = document.getElementById('last-feed-info');
+  if (!mostRecentFeedTime) {
+    el.innerText = 'No feeds yet';
+    return;
+  }
+  const diffMs = new Date() - new Date(mostRecentFeedTime);
+  const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  el.innerText = `Last fed: ${diffHrs > 0 ? diffHrs + 'h ' : ''}${diffMins}m ago`;
+};
 
 // Listen for Feed Updates
 const q = query(collection(db, 'feeds'), orderBy('timestamp', 'desc'));
@@ -56,9 +91,21 @@ onSnapshot(q, (snapshot) => {
     logsContainer.appendChild(div);
   });
 
-  if (snapshot.empty) logsContainer.innerHTML = '<p style="color: gray;">No feeds yet.</p>';
-  document.getElementById('today-total').innerText = `${todayTotal} ml`;
+  if (snapshot.empty) logsContainer.innerHTML = '<p style="color: var(--ios-text-muted);">No feeds yet.</p>';
   
+  // Update Today Total & Progress Bar
+  document.getElementById('today-total').innerText = `${todayTotal} ml`;
+  const progressPercent = Math.min((todayTotal / DAILY_GOAL) * 100, 100);
+  document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+  // Start/Update Timer
+  if (allFeedsData.length > 0) {
+    mostRecentFeedTime = allFeedsData[0].timestamp; // Firebase orders by timestamp desc
+    updateTimeSinceLastFeed();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimeSinceLastFeed, 60000);
+  }
+
   updateChart();
 });
 
@@ -93,24 +140,14 @@ document.getElementById('add-btn').addEventListener('click', async () => {
 
   try {
     if (amount === 0) {
-      if (editingId) {
-        await deleteDoc(doc(db, 'feeds', editingId));
-      } else {
-        alert("Amount must be greater than 0");
-      }
+      if (editingId) await deleteDoc(doc(db, 'feeds', editingId));
+      else alert("Amount must be greater than 0");
     } else if (editingId) {
-      await updateDoc(doc(db, 'feeds', editingId), {
-        timestamp: new Date(time).toISOString(),
-        amount: amount
-      });
+      await updateDoc(doc(db, 'feeds', editingId), { timestamp: new Date(time).toISOString(), amount: amount });
     } else {
-      await addDoc(collection(db, 'feeds'), {
-        timestamp: new Date(time).toISOString(),
-        amount: amount
-      });
+      await addDoc(collection(db, 'feeds'), { timestamp: new Date(time).toISOString(), amount: amount });
     }
 
-    // Reset state
     editingId = null;
     btn.innerText = 'Add Feed';
     btn.style.background = '';
@@ -119,8 +156,7 @@ document.getElementById('add-btn').addEventListener('click', async () => {
     setTimeInputToNow();
 
   } catch (error) {
-    console.error("Error saving document: ", error);
-    alert("Failed to save. Check console.");
+    console.error("Error: ", error);
     btn.innerText = editingId ? 'Update Feed' : 'Add Feed';
   }
 });
@@ -143,7 +179,6 @@ function updateChart() {
   const today = new Date();
   const dailyMap = {};
   
-  // Generate contiguous dates for the selected timeframe
   for (let i = currentChartDays - 1; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
@@ -152,13 +187,10 @@ function updateChart() {
     dailyMap[key] = { label, amount: 0 };
   }
 
-  // Populate data
   allFeedsData.forEach(f => {
     const fd = new Date(f.timestamp);
     const key = fd.toLocaleDateString('en-US');
-    if (dailyMap[key] !== undefined) {
-      dailyMap[key].amount += f.amount;
-    }
+    if (dailyMap[key] !== undefined) dailyMap[key].amount += f.amount;
   });
 
   const labels = [];
@@ -174,52 +206,29 @@ function updateChart() {
   const avg = Math.round(totalForPeriod / currentChartDays);
   const lineData = labels.map(() => avg);
 
+  // Detect Active Theme for Chart Colors
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  const chartTextColor = isDarkMode ? 'rgba(235, 235, 245, 0.6)' : '#8E8E93';
+  const barColor = isDarkMode ? '#FF9500' : '#007AFF';
+  const lineColor = isDarkMode ? '#FFFFFF' : '#FF9500';
+
   if (chartInstance) chartInstance.destroy();
   
   chartInstance = new Chart(ctx, {
     data: {
       labels: labels,
       datasets: [
-        {
-          type: 'line',
-          label: 'Average',
-          data: lineData,
-          borderColor: '#FF9500', // iOS Orange for contrast
-          borderWidth: 2,
-          borderDash: [5, 5],
-          pointRadius: 0,
-          fill: false,
-          order: 1
-        },
-        {
-          type: 'bar',
-          label: 'Daily Total (ml)',
-          data: barData,
-          backgroundColor: '#007AFF',
-          borderRadius: 6,
-          order: 2
-        }
+        { type: 'line', label: 'Average', data: lineData, borderColor: lineColor, borderWidth: 2, borderDash: [5, 5], pointRadius: 0, fill: false, order: 1 },
+        { type: 'bar', label: 'Daily Total (ml)', data: barData, backgroundColor: barColor, borderRadius: 6, order: 2 }
       ]
     },
     options: { 
       responsive: true,
-      maintainAspectRatio: false, 
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-        }
-      },
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
       scales: {
-        x: { 
-          grid: { display: false } 
-        },
-        y: { 
-          beginAtZero: true,
-          grid: { display: false },
-          border: { display: false }
-        }
+        x: { grid: { display: false }, ticks: { color: chartTextColor } },
+        y: { beginAtZero: true, grid: { display: false }, border: { display: false }, ticks: { color: chartTextColor } }
       }
     }
   });

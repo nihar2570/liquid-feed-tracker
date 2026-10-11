@@ -20,14 +20,27 @@
     
     <!-- HOME TAB -->
     <div id="home-tab" class="tab-content active">
-      <h1 class="page-title">Feed Tracker</h1>
       
-      <!-- Full-Width Today Banner -->
-      <div class="today-banner">
-        <span class="banner-label">Today's Total</span>
-        <span id="today-total" class="banner-value">0 ml</span>
+      <!-- Header with Theme Toggle (Replaces the old h1 completely) -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h1 class="page-title" style="margin-bottom: 0;">Feed Tracker</h1>
+        <button id="theme-btn" class="theme-btn">🌙</button>
       </div>
 
+      <!-- Full-Width Today Banner with Progress -->
+      <div class="today-banner">
+        <div class="banner-header">
+          <span class="banner-label">Today's Total</span>
+          <span id="today-total" class="banner-value">0 ml</span>
+        </div>
+        <!-- Progress Bar (Goal: 700ml) -->
+        <div class="progress-track">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <!-- Time Since Last Feed -->
+        <div id="last-feed-info" class="last-feed-text">Last fed: --</div>
+      </div>
+      
       <div class="ios-card">
         <div class="input-group">
           <input type="datetime-local" id="feed-time" class="ios-input" />

@@ -228,7 +228,7 @@ body {
   width: 100%;
 }
 
-/* Full-Width Today Banner */
+/* Stacked Today Banner */
 .today-banner {
   background: var(--glass-bg);
   backdrop-filter: blur(24px);
@@ -238,9 +238,15 @@ body {
   border-radius: 20px;
   box-shadow: var(--glass-shadow);
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.banner-header {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .banner-label {
@@ -254,3 +260,83 @@ body {
   font-weight: 800;
   color: var(--ios-blue);
 }
+
+/* Progress Bar & Timer */
+.progress-track {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #007AFF, #34C759);
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.8s ease-out;
+}
+
+.last-feed-text {
+  font-size: 13px;
+  color: var(--ios-text-muted);
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Theme Toggle Button */
+.theme-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--ios-text);
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.2s;
+}
+.theme-btn:active { transform: scale(0.9); }
+
+/* =========================================
+   DARK MODE (Class-based override)
+========================================= */
+body.dark-mode {
+  --ios-text: #ffffff;
+  --ios-text-muted: rgba(235, 235, 245, 0.6);
+  --ios-blue: #FF9500; /* Swaps Blue to iOS Orange globally */
+  --glass-bg: rgba(30, 30, 30, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(-45deg, #0f172a, #261715, #170f2e, #020617);
+  background-size: 400% 400%;
+}
+
+body.dark-mode .ios-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+body.dark-mode .ios-input:focus { 
+  background: rgba(0, 0, 0, 0.5); 
+  border-color: var(--ios-blue);
+  box-shadow: 0 0 0 4px rgba(255, 149, 0, 0.15), inset 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+body.dark-mode .ios-button {
+  background: linear-gradient(135deg, #FF9500 0%, #d97d00 100%);
+  box-shadow: 0 6px 16px rgba(255, 149, 0, 0.3);
+}
+
+body.dark-mode .progress-track { background: rgba(255, 255, 255, 0.1); }
+body.dark-mode .progress-fill { background: linear-gradient(90deg, #FF9500, #FFD60A); }
+body.dark-mode .segment-btn.active { background: rgba(255, 255, 255, 0.15); color: white; }
+body.dark-mode .bottom-nav { background: rgba(20, 20, 20, 0.75); border-color: rgba(255, 255, 255, 0.1); }
+body.dark-mode .nav-button.active { background: rgba(255, 149, 0, 0.1); color: var(--ios-blue); }
