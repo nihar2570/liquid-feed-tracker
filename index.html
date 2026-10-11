@@ -33,10 +33,17 @@
         <p style="color: var(--ios-text-muted);">Loading...</p>
       </div>
     </div>
-
+    
     <!-- TRENDS TAB -->
     <div id="trends-tab" class="tab-content">
       <h1 class="page-title">Trends</h1>
+      
+      <div class="segmented-control" id="timeframe-controls">
+        <button class="segment-btn active" data-days="7">1 Week</button>
+        <button class="segment-btn" data-days="14">2 Weeks</button>
+        <button class="segment-btn" data-days="28">4 Weeks</button>
+      </div>
+
       <div class="ios-card">
         <canvas id="trendsChart"></canvas>
       </div>
