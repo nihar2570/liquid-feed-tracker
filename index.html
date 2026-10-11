@@ -7,6 +7,13 @@
   <link rel="stylesheet" href="style.css">
   <!-- Chart.js for Trends -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- iOS App Icon and Fullscreen Mode -->
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Feed Log">
+
 </head>
 <body>
   <div class="app-container">
@@ -44,7 +51,7 @@
         <button class="segment-btn" data-days="28">4 Weeks</button>
       </div>
 
-      <div class="ios-card">
+      <div class="ios-card chart-container">
         <canvas id="trendsChart"></canvas>
       </div>
     </div>
