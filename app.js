@@ -25,9 +25,14 @@ let mostRecentFeedTime = null;
 const themeBtn = document.getElementById('theme-btn');
 const initTheme = () => {
   const saved = localStorage.getItem('theme');
-  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  
+  // Only activate dark mode if the user explicitly saved it previously
+  if (saved === 'dark') {
     document.body.classList.add('dark-mode');
     themeBtn.innerText = '☀️';
+  } else {
+    document.body.classList.remove('dark-mode');
+    themeBtn.innerText = '🌙';
   }
 };
 initTheme();
