@@ -88,7 +88,7 @@ onSnapshot(q, (snapshot) => {
     div.className = 'log-item';
     div.innerHTML = `
       <div>
-        <div class="log-time">${feedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} at ${feedDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+        <div class="log-time">${feedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} at ${feedDate.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}</div>
         <div class="log-amount">${data.amount} ml</div>
       </div>
       <button class="edit-btn" data-id="${docId}" data-time="${data.timestamp}" data-amount="${data.amount}">Edit</button>
