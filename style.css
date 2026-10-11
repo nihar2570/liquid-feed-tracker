@@ -348,3 +348,13 @@ body.dark-mode .progress-fill { background: linear-gradient(90deg, #FF9500, #FFD
 body.dark-mode .segment-btn.active { background: rgba(255, 255, 255, 0.15); color: white; }
 body.dark-mode .bottom-nav { background: rgba(20, 20, 20, 0.75); border-color: rgba(255, 255, 255, 0.1); }
 body.dark-mode .nav-button.active { background: rgba(255, 149, 0, 0.1); color: var(--ios-blue); }
+
+/* Fix for iOS datetime-local overflow */
+input[type="datetime-local"].ios-input {
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 15px; 
+  letter-spacing: -0.5px;
+  -webkit-appearance: none;
+  appearance: none;
+}
