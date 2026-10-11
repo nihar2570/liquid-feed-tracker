@@ -97,7 +97,7 @@ body {
 
 /* 3. Inset Liquid Inputs */
 .ios-input {
-  width: 100%; 
+  max-width: 100%; 
   padding: 14px 18px; 
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.6);
