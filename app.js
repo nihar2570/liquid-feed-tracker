@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { initializeFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyABS_RwxXguaFCZ_GL6RZVPNL-kQknDA2k",
@@ -7,12 +7,13 @@ const firebaseConfig = {
   projectId: "feeds-23adf",
   storageBucket: "feeds-23adf.firebasestorage.app",
   messagingSenderId: "931523195597",
-  appId: "1:931523195597:web:9924233f8ddbef67a5af84",
-  measurementId: "G-B8GDCY6FJT"
+  appId: "1:931523195597:web:9924233f8ddbef67a5af84"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true
+});
 let chartInstance = null;
 let editingId = null;
 let allFeedsData = [];
@@ -20,6 +21,61 @@ let currentChartDays = 7;
 const DAILY_GOAL = 700; // Change this to your daily target
 let timerInterval = null;
 let mostRecentFeedTime = null;
+
+// Preset Users & Auth Logic
+const PRESET_USERS = {
+  'nihar':   { name: 'Nihar',   pass: 'Hyder@123' },
+  'narmada': { name: 'Narmada', pass: 'Hyder@1234' },
+  'guest':   { name: 'Guest',   pass: 'Guest@123' }
+};
+
+let currentUser = localStorage.getItem('feedUser') || null;
+const loginOverlay = document.getElementById('login-overlay');
+const userBtn = document.getElementById('user-btn');
+const loginUserEl = document.getElementById('login-user');
+const loginPassEl = document.getElementById('login-pass');
+const loginErrorEl = document.getElementById('login-error');
+
+const updateAuthUI = () => {
+  if (currentUser) {
+    loginOverlay.style.display = 'none';
+    userBtn.innerText = `👤 ${currentUser}`;
+  } else {
+    loginOverlay.style.display = 'flex';
+    userBtn.innerText = '👤 --';
+  }
+};
+updateAuthUI();
+
+const handleLogin = () => {
+  const rawUser = loginUserEl.value.trim().toLowerCase();
+  const rawPass = loginPassEl.value;
+  const matched = PRESET_USERS[rawUser];
+
+  if (matched && matched.pass === rawPass) {
+    currentUser = matched.name;
+    localStorage.setItem('feedUser', currentUser);
+    loginUserEl.value = '';
+    loginPassEl.value = '';
+    loginErrorEl.innerText = '';
+    updateAuthUI();
+  } else {
+    loginErrorEl.innerText = 'Invalid user ID or password';
+  }
+};
+
+document.getElementById('login-btn').addEventListener('click', handleLogin);
+loginPassEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') handleLogin();
+});
+
+userBtn.addEventListener('click', () => {
+  if (confirm(`Signed in as ${currentUser}. Switch user / log out?`)) {
+    currentUser = null;
+    localStorage.removeItem('feedUser');
+    updateAuthUI();
+  }
+});
 
 // Theme Toggle Logic
 const themeBtn = document.getElementById('theme-btn');
@@ -84,12 +140,18 @@ onSnapshot(q, (snapshot) => {
       todayTotal += Number(data.amount);
     }
 
+    const metaParts = [];
+    if (data.addedBy) metaParts.push(`Added by ${data.addedBy}`);
+    if (data.editedBy) metaParts.push(`Edited by ${data.editedBy}`);
+    const metaHtml = metaParts.length > 0 ? `<div class="log-meta">${metaParts.join(' • ')}</div>` : '';
+
     const div = document.createElement('div');
     div.className = 'log-item';
     div.innerHTML = `
       <div>
         <div class="log-time">${feedDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} at ${feedDate.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'})}</div>
         <div class="log-amount">${data.amount} ml</div>
+        ${metaHtml}
       </div>
       <button class="edit-btn" data-id="${docId}" data-time="${data.timestamp}" data-amount="${data.amount}">Edit</button>
     `;
@@ -121,7 +183,9 @@ document.getElementById('logs-container').addEventListener('click', (e) => {
     const time = e.target.getAttribute('data-time');
     const amount = e.target.getAttribute('data-amount');
     
-    document.getElementById('feed-time').value = new Date(time).toISOString().slice(0, 16);
+    const d = new Date(time);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    document.getElementById('feed-time').value = d.toISOString().slice(0, 16);
     document.getElementById('feed-amount').value = amount;
     
     editingId = id;
@@ -135,6 +199,11 @@ document.getElementById('logs-container').addEventListener('click', (e) => {
 
 // Add, Update, or Delete Feed
 document.getElementById('add-btn').addEventListener('click', async () => {
+  if (!currentUser) {
+    updateAuthUI();
+    return;
+  }
+
   const time = document.getElementById('feed-time').value;
   const amount = Number(document.getElementById('feed-amount').value);
 
@@ -148,9 +217,17 @@ document.getElementById('add-btn').addEventListener('click', async () => {
       if (editingId) await deleteDoc(doc(db, 'feeds', editingId));
       else alert("Amount must be greater than 0");
     } else if (editingId) {
-      await updateDoc(doc(db, 'feeds', editingId), { timestamp: new Date(time).toISOString(), amount: amount });
+      await updateDoc(doc(db, 'feeds', editingId), {
+        timestamp: new Date(time).toISOString(),
+        amount: amount,
+        editedBy: currentUser
+      });
     } else {
-      await addDoc(collection(db, 'feeds'), { timestamp: new Date(time).toISOString(), amount: amount });
+      await addDoc(collection(db, 'feeds'), {
+        timestamp: new Date(time).toISOString(),
+        amount: amount,
+        addedBy: currentUser
+      });
     }
 
     editingId = null;
