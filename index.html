@@ -60,15 +60,30 @@
       
       <div class="ios-card">
         <div class="input-group">
-          <input type="datetime-local" id="feed-time" class="ios-input" />
+          <div class="time-row">
+            <input type="datetime-local" id="feed-time" class="ios-input" />
+            <button type="button" id="now-btn" class="chip-btn now-btn">Now</button>
+          </div>
           <input type="number" id="feed-amount" placeholder="Amount in ml" class="ios-input" />
+          <div class="quick-chips" id="quick-chips">
+            <button type="button" class="chip-btn" data-set="60">60ml</button>
+            <button type="button" class="chip-btn" data-set="90">90ml</button>
+            <button type="button" class="chip-btn" data-set="120">120ml</button>
+            <button type="button" class="chip-btn" data-set="150">150ml</button>
+            <button type="button" class="chip-btn chip-step" data-delta="-10">-10</button>
+            <button type="button" class="chip-btn chip-step" data-delta="10">+10</button>
+          </div>
         </div>
         <button id="add-btn" class="ios-button">Add Feed</button>
+        <div id="edit-actions" class="edit-actions" style="display: none;">
+          <button type="button" id="cancel-edit-btn" class="secondary-btn">Cancel</button>
+          <button type="button" id="delete-feed-btn" class="danger-btn">🗑️ Delete</button>
+        </div>
       </div>
 
       <h2 class="section-title" style="margin-top: 24px;">Recent Logs</h2>
-      <div class="ios-card" id="logs-container">
-        <p style="color: var(--ios-text-muted);">Loading...</p>
+      <div id="logs-container">
+        <div class="ios-card"><p style="color: var(--ios-text-muted); margin: 0;">Loading...</p></div>
       </div>
     </div>
     
@@ -80,6 +95,22 @@
         <button class="segment-btn active" data-days="7">1 Week</button>
         <button class="segment-btn" data-days="14">2 Weeks</button>
         <button class="segment-btn" data-days="28">4 Weeks</button>
+      </div>
+
+      <!-- Summary Stats Grid -->
+      <div class="stats-grid">
+        <div class="ios-card stat-card">
+          <div class="stat-label">Daily Avg</div>
+          <div class="stat-value" id="stat-daily-avg">--</div>
+        </div>
+        <div class="ios-card stat-card">
+          <div class="stat-label">Avg / Feed</div>
+          <div class="stat-value" id="stat-feed-avg">--</div>
+        </div>
+        <div class="ios-card stat-card">
+          <div class="stat-label">Feeds / Day</div>
+          <div class="stat-value" id="stat-feeds-day">--</div>
+        </div>
       </div>
 
       <div class="ios-card chart-container">

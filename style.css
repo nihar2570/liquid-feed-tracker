@@ -417,3 +417,187 @@ input[type="datetime-local"].ios-input {
 body.dark-mode .log-time {
   color: rgba(235, 235, 245, 0.85);
 }
+
+/* Quick-Tap Chips & Time Row */
+.time-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.time-row .ios-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-chips {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+
+.chip-btn {
+  background: rgba(0, 122, 255, 0.1);
+  color: var(--ios-blue);
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  border-radius: 12px;
+  padding: 10px 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.chip-btn:active {
+  transform: scale(0.94);
+  background: rgba(0, 122, 255, 0.22);
+}
+
+.chip-step {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--ios-text);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.now-btn {
+  padding: 14px 14px;
+  border-radius: 16px;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+body.dark-mode .chip-btn {
+  background: rgba(255, 149, 0, 0.14);
+  border-color: rgba(255, 149, 0, 0.28);
+}
+
+body.dark-mode .chip-step {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ios-text);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Edit Secondary Actions (Cancel & Delete) */
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.secondary-btn, .danger-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease;
+}
+
+.secondary-btn {
+  background: rgba(0, 0, 0, 0.07);
+  color: var(--ios-text);
+}
+
+.danger-btn {
+  background: rgba(255, 59, 48, 0.14);
+  color: #FF3B30;
+}
+
+body.dark-mode .secondary-btn {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.secondary-btn:active, .danger-btn:active {
+  transform: scale(0.97);
+}
+
+/* Day-Grouped Logs */
+.day-group-card {
+  padding: 16px 20px;
+  margin-bottom: 14px;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.dark-mode .day-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.day-group-card.collapsed .day-header {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.day-group-card.collapsed .day-logs {
+  display: none;
+}
+
+.day-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ios-text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.day-chevron {
+  font-size: 11px;
+  color: var(--ios-text-muted);
+  transition: transform 0.2s ease;
+}
+
+.day-group-card.collapsed .day-chevron {
+  transform: rotate(-90deg);
+}
+
+.day-summary {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ios-blue);
+}
+
+.day-summary span {
+  font-weight: 500;
+  color: var(--ios-text-muted);
+  font-size: 12px;
+}
+
+/* Trends Summary Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  padding: 14px 10px;
+  margin-bottom: 0;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ios-text-muted);
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ios-blue);
+}
