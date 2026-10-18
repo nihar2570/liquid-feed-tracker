@@ -116,6 +116,25 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
+// Feature: Quick Clear (×) Button for Amount Input
+const feedAmountInput = document.getElementById('feed-amount');
+const clearAmountBtn = document.getElementById('clear-amount-btn');
+
+const updateClearBtnVisibility = () => {
+  if (clearAmountBtn) {
+    clearAmountBtn.style.display = feedAmountInput.value ? 'flex' : 'none';
+  }
+};
+
+feedAmountInput.addEventListener('input', updateClearBtnVisibility);
+if (clearAmountBtn) {
+  clearAmountBtn.addEventListener('click', () => {
+    feedAmountInput.value = '';
+    updateClearBtnVisibility();
+    feedAmountInput.focus();
+  });
+}
+
 // Feature #1: Quick-Tap ml Chips & Steppers
 document.getElementById('quick-chips').addEventListener('click', (e) => {
   const btn = e.target.closest('.chip-btn');
@@ -128,6 +147,7 @@ document.getElementById('quick-chips').addEventListener('click', (e) => {
     const current = Number(amountInput.value) || 0;
     amountInput.value = Math.max(0, current + delta);
   }
+  updateClearBtnVisibility();
 });
 
 // Timer Function
@@ -231,8 +251,21 @@ onSnapshot(q, (snapshot) => {
   
   // Update Today Total & Progress Bar
   document.getElementById('today-total').innerText = `${todayTotal} ml`;
-  const progressPercent = Math.min((todayTotal / DAILY_GOAL) * 100, 100);
+  const progressRatio = (todayTotal / DAILY_GOAL) * 100;
+  const progressPercent = Math.min(progressRatio, 100);
   document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+
+  const percentEl = document.getElementById('progress-percent');
+  const remainingEl = document.getElementById('progress-remaining');
+  if (percentEl && remainingEl) {
+    percentEl.innerText = `${Math.round(progressRatio)}%`;
+    const remainingMl = DAILY_GOAL - todayTotal;
+    if (remainingMl <= 0) {
+      remainingEl.innerText = `Goal reached! 🎉 (+${Math.abs(remainingMl)} ml)`;
+    } else {
+      remainingEl.innerText = `${remainingMl} ml left`;
+    }
+  }
 
   // Start/Update Timer
   if (allFeedsData.length > 0) {
@@ -257,6 +290,7 @@ const exitEditMode = () => {
   btn.style.boxShadow = '';
   document.getElementById('edit-actions').style.display = 'none';
   document.getElementById('feed-amount').value = '';
+  updateClearBtnVisibility();
   setTimeInputToNow();
 };
 
@@ -302,6 +336,7 @@ document.getElementById('logs-container').addEventListener('click', (e) => {
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
     document.getElementById('feed-time').value = d.toISOString().slice(0, 16);
     document.getElementById('feed-amount').value = amount;
+    updateClearBtnVisibility();
     
     editingId = id;
     const btn = document.getElementById('add-btn');

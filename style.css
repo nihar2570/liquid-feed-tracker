@@ -263,6 +263,12 @@ body {
   color: var(--ios-text-muted);
 }
 
+.banner-goal {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
 .banner-value {
   font-size: 24px;
   font-weight: 800;
@@ -283,6 +289,17 @@ body {
   width: 0%;
   border-radius: 4px;
   transition: width 0.8s ease-out;
+}
+
+.progress-sub-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ios-text-muted);
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .last-feed-text {
@@ -430,9 +447,51 @@ body.dark-mode .log-time {
   min-width: 0;
 }
 
+.input-clear-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-clear-wrapper .ios-input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--ios-text-muted);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.clear-btn:active {
+  transform: scale(0.9);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .clear-btn {
+  background: rgba(255, 255, 255, 0.16);
+  color: rgba(235, 235, 245, 0.8);
+}
+
 .quick-chips {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 6px;
 }
 
@@ -460,6 +519,24 @@ body.dark-mode .log-time {
   border-color: rgba(0, 0, 0, 0.08);
 }
 
+.chip-minus {
+  background: rgba(255, 59, 48, 0.1);
+  color: #FF3B30;
+  border-color: rgba(255, 59, 48, 0.25);
+}
+.chip-minus:active {
+  background: rgba(255, 59, 48, 0.22);
+}
+
+.chip-plus {
+  background: rgba(52, 199, 89, 0.12);
+  color: #28a745;
+  border-color: rgba(52, 199, 89, 0.25);
+}
+.chip-plus:active {
+  background: rgba(52, 199, 89, 0.25);
+}
+
 .now-btn {
   padding: 14px 14px;
   border-radius: 16px;
@@ -476,6 +553,18 @@ body.dark-mode .chip-step {
   background: rgba(255, 255, 255, 0.08);
   color: var(--ios-text);
   border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.dark-mode .chip-minus {
+  background: rgba(255, 69, 58, 0.18);
+  color: #FF453A;
+  border-color: rgba(255, 69, 58, 0.3);
+}
+
+body.dark-mode .chip-plus {
+  background: rgba(48, 209, 88, 0.18);
+  color: #30D158;
+  border-color: rgba(48, 209, 88, 0.3);
 }
 
 /* Edit Secondary Actions (Cancel & Delete) */

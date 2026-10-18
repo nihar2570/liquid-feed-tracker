@@ -47,12 +47,17 @@
       <!-- Full-Width Today Banner with Progress -->
       <div class="today-banner">
         <div class="banner-header">
-          <span class="banner-label">Today's Total</span>
+          <span class="banner-label">Today's Total <span class="banner-goal">(Goal: 700 ml)</span></span>
           <span id="today-total" class="banner-value">0 ml</span>
         </div>
         <!-- Progress Bar (Goal: 700ml) -->
         <div class="progress-track">
           <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <!-- Progress Sub-info (Remaining & %) -->
+        <div class="progress-sub-info">
+          <span id="progress-percent">0%</span>
+          <span id="progress-remaining">700 ml left</span>
         </div>
         <!-- Time Since Last Feed -->
         <div id="last-feed-info" class="last-feed-text">Last fed: --</div>
@@ -64,14 +69,16 @@
             <input type="datetime-local" id="feed-time" class="ios-input" />
             <button type="button" id="now-btn" class="chip-btn now-btn">Now</button>
           </div>
-          <input type="number" id="feed-amount" placeholder="Amount in ml" class="ios-input" />
+          <div class="input-clear-wrapper">
+            <input type="number" id="feed-amount" placeholder="Amount in ml" class="ios-input" />
+            <button type="button" id="clear-amount-btn" class="clear-btn" aria-label="Clear amount">✕</button>
+          </div>
           <div class="quick-chips" id="quick-chips">
             <button type="button" class="chip-btn" data-set="60">60ml</button>
             <button type="button" class="chip-btn" data-set="90">90ml</button>
             <button type="button" class="chip-btn" data-set="120">120ml</button>
-            <button type="button" class="chip-btn" data-set="150">150ml</button>
-            <button type="button" class="chip-btn chip-step" data-delta="-10">-10</button>
-            <button type="button" class="chip-btn chip-step" data-delta="10">+10</button>
+            <button type="button" class="chip-btn chip-step chip-minus" data-delta="-5">- 5ml</button>
+            <button type="button" class="chip-btn chip-step chip-plus" data-delta="5">+ 5ml</button>
           </div>
         </div>
         <button id="add-btn" class="ios-button">Add Feed</button>
