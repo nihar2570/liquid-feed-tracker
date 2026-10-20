@@ -113,6 +113,7 @@ document.getElementById('now-btn').addEventListener('click', setTimeInputToNow);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && !editingId) {
     setTimeInputToNow();
+    refreshTimers();
   }
 });
 
@@ -150,7 +151,24 @@ document.getElementById('quick-chips').addEventListener('click', (e) => {
   updateClearBtnVisibility();
 });
 
-// Timer Function
+// Day Elapsed & Timer Functions
+const updateDayElapsed = () => {
+  const el = document.getElementById('day-elapsed');
+  if (!el) return;
+  const now = new Date();
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const msElapsed = now - startOfDay;
+  const msInDay = 24 * 60 * 60 * 1000;
+  const dayPercent = Math.min(100, Math.max(0, Math.round((msElapsed / msInDay) * 100)));
+  el.innerText = `(${dayPercent}% of day completed)`;
+};
+updateDayElapsed();
+
+const refreshTimers = () => {
+  updateTimeSinceLastFeed();
+  updateDayElapsed();
+};
+
 const updateTimeSinceLastFeed = () => {
   const el = document.getElementById('last-feed-info');
   if (!mostRecentFeedTime) {
@@ -270,13 +288,12 @@ onSnapshot(q, (snapshot) => {
   // Start/Update Timer
   if (allFeedsData.length > 0) {
     mostRecentFeedTime = allFeedsData[0].timestamp; // Firebase orders by timestamp desc
-    updateTimeSinceLastFeed();
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(updateTimeSinceLastFeed, 60000);
   } else {
     mostRecentFeedTime = null;
-    updateTimeSinceLastFeed();
   }
+  refreshTimers();
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(refreshTimers, 60000);
 
   updateChart();
 });
