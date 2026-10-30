@@ -26,6 +26,7 @@ let mostRecentFeedTime = null;
 const PRESET_USERS = {
   'nihar':   { name: 'Nihar',   pass: 'Hyder@123' },
   'narmada': { name: 'Narmada', pass: 'Hyder@1234' },
+  'sweety': { name: 'Sweety', pass: 'Hyder@12345' },
   'guest':   { name: 'Guest',   pass: 'Guest@123' }
 };
 
